@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Étudiants | ESISA</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2>ESISA</h2>
+                <p>Gestion Étudiants</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active">
+                    <i class="fas fa-users"></i>
+                    <span>Étudiants</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Statistiques</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>Paramètres</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-details">
+                        <span class="user-name">Omar</span>
+                        <span class="user-role">Administrateur</span>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="doLogout()" title="Déconnexion">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="page-title">
+                    <h1>Gestion des Étudiants</h1>
+                    <p>Gérez facilement vos étudiants</p>
+                </div>
+                <div class="top-bar-actions">
+                    <button class="btn-export" onclick="exportToCSV()">
+                        <i class="fas fa-download"></i>
+                        Exporter CSV
+                    </button>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <section class="stats-section">
+                <div class="stat-card">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value" id="total-students">0</span>
+                        <span class="stat-label">Total Étudiants</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon green">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value" id="this-month-students">0</span>
+                        <span class="stat-label">Ce Mois</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon purple">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value" id="total-filiere">0</span>
+                        <span class="stat-label">Filières</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Content Area -->
+            <section class="content-area">
+                <!-- Filters & Search -->
+                <div class="filters-bar">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="search-input" placeholder="Rechercher par nom, prénom, email...">
+                    </div>
+                    <div class="filter-group">
+                        <select id="filiere-filter" class="filter-select">
+                            <option value="">Toutes les filières</option>
+                        </select>
+                        <select id="sort-select" class="filter-select">
+                            <option value="created_at,DESC">Plus récents</option>
+                            <option value="created_at,ASC">Plus anciens</option>
+                            <option value="name,ASC">Nom A-Z</option>
+                            <option value="name,DESC">Nom Z-A</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Add Student Card -->
+                <div class="add-student-card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-user-plus"></i> Ajouter un Étudiant</h3>
+                    </div>
+                    <form id="student-form" class="student-form">
+                        <input type="hidden" id="student-id">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="name">Nom</label>
+                                <input type="text" id="name" placeholder="Nom de l'étudiant" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="firstname">Prénom</label>
+                                <input type="text" id="firstname" placeholder="Prénom de l'étudiant" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="age">Âge</label>
+                                <input type="number" id="age" placeholder="18" min="1" max="100" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" placeholder="email@exemple.com" required>
+                            </div>
+                            <div class="form-group full-width">
+                                <label for="filiere">Filière</label>
+                                <select id="filiere" required>
+                                    <option value="">Sélectionner une filière</option>
+                                    <option value="Génie Informatique">Génie Informatique</option>
+                                    <option value="Génie Civil">Génie Civil</option>
+                                    <option value="Génie Mécanique">Génie Mécanique</option>
+                                    <option value="Génie Électrique">Génie Électrique</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Marketing">Marketing</option>
+                                    <option value="Comptabilité">Comptabilité</option>
+                                    <option value="Droit">Droit</option>
+                                    <option value="Médecine">Médecine</option>
+                                    <option value="Pharmacie">Pharmacie</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary" id="submit-btn">
+                                <i class="fas fa-plus"></i>
+                                <span>Ajouter l'étudiant</span>
+                            </button>
+                            <button type="button" id="cancel-btn" class="btn-secondary" style="display:none;">
+                                <i class="fas fa-times"></i>
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Students Table -->
+                <div class="table-card">
+                    <div class="table-header">
+                        <h3><i class="fas fa-list"></i> Liste des Étudiants</h3>
+                        <span class="record-count" id="record-count">0 enregistrement(s)</span>
+                    </div>
+                    <div class="table-wrapper">
+                        <table id="students-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Prénom</th>
+                                    <th>Âge</th>
+                                    <th>Email</th>
+                                    <th>Filière</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="students-tbody">
+                                <!-- Data will be loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be generated here -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
