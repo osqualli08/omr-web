@@ -3,20 +3,30 @@ const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
+const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 3000;
 
 // middleware
 app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Database connection
-const dbFile = path.join(__dirname, 'students.db');
+// Database path - use /tmp for ephemeral filesystems
+const isRailway = process.env.RAILWAY_ENVIRONMENT || process.env.RAILWAY_STATIC_URL;
+const dbDir = isRailway ? '/tmp' : __dirname;
+const dbFile = path.join(dbDir, 'students.db');
+
+console.log('Database path:', dbFile);
+
+// Create database connection
 const db = new sqlite3.Database(dbFile, (err) => {
-  if (err) return console.error(err.message);
-  console.log('Connected to SQLite database');
+  if (err) {
+    console.error('Database connection error:', err.message);
+  } else {
+    console.log('Connected to SQLite database');
+  }
 });
 
 // Create students table
