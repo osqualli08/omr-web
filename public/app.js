@@ -30,7 +30,7 @@ function logout() {
 
 async function doLogout() {
     try {
-        await fetch('/api/logout', { method: 'POST' });
+        await fetch(`${API_BASE_URL}/api/logout`, { method: 'POST' });
     } catch (e) {
         console.error('Logout error:', e);
     }
@@ -74,7 +74,7 @@ function hideLoading() {
 // ==================== Statistics ====================
 async function loadStatistics() {
     try {
-        const res = await fetch('/api/statistics');
+        const res = await fetch(`${API_BASE_URL}/api/statistics`);
         const data = await res.json();
         
         document.getElementById('total-students').textContent = data.total;
@@ -93,7 +93,7 @@ async function fetchStudents() {
         limit: 10
     });
     
-    const res = await fetch(`/api/students?${params}`);
+    const res = await fetch(`${API_BASE_URL}/api/students?${params}`);
     return res.json();
 }
 
